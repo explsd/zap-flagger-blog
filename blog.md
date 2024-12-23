@@ -76,7 +76,7 @@ The podinfo container will be used as our application that Flagger will be coord
 ## Deploy ZAP resources
 Flagger will be triggering ZAP, but we need to set up the resources ahead of time.
 
-1. Copy the following `PersistentVolumeClaim`, subtituting the `storageClassName` value with an appropriate `StorageClass` on your cluster. Save as `zap-pvc.yaml` and apply with `kubectl apply -f zap-pvc.yaml`. This will be where the ZAP reports will be saved it. I'm saving mine to Azure Blob Storage, which is where I will be reading the report from.
+1. Copy the following `PersistentVolumeClaim`, substituting the `storageClassName` value with an appropriate `StorageClass` on your cluster. Save as `zap-pvc.yaml` and apply with `kubectl apply -f zap-pvc.yaml`. This will be where the ZAP reports will be saved it. I'm saving mine to Azure Blob Storage, which is where I will be reading the report from.
     ```
     apiVersion: v1
     kind: PersistentVolumeClaim
@@ -282,7 +282,7 @@ The ZAP Automation Plan is created as a `ConfigMap` which then Kubernetes attach
           type: report
     ```
     - `af-plan.yaml` is an Automation Plan that was generated using the ZAP GUI.
-    - The context we are using is `http://podinfo:9898` with everything `http://podinfo:9898.*` in scope with the exlusion of `http://podinfo:9898/panic` and `http://podinfo:9898/status/10`. (podinfo has some testing features that ZAP can trigger and disrupt the pod)
+    - The context we are using is `http://podinfo:9898` with everything `http://podinfo:9898.*` in scope with the exclusion of `http://podinfo:9898/panic` and `http://podinfo:9898/status/10`. (podinfo has some testing features that ZAP can trigger and disrupt the pod)
 - The first job is a delay, this is so that Flagger can spin up ZAP when a deployment starts, but wait until the deployment is finished before triggering attacks. Attacks during the deployment process could potentially impact metrics and trigger a rollback.
 - After the delay, ZAP inspects the OpenAPI spec and then uses it to attack podinfo.
 - The results is then generated as a pdf report as well as a SARIF report.
